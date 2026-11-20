@@ -1,5 +1,5 @@
 from flask import Blueprint,request,jsonify
-from app.pipeline import run
+from app.access import scoped_run
 from app.errors import DomainError
 bp=Blueprint("m6",__name__)
 @bp.route("/api/m6",methods=["GET","POST"])
@@ -8,4 +8,4 @@ def endpoint():
     if not isinstance(payload,dict): raise DomainError("BODY","请求必须是对象")
     raw=payload.get("text")
     if raw is not None and not isinstance(raw,str): raise DomainError("TEXT","数据必须为文本")
-    return jsonify(run(raw,payload.get("params"),stop=6,persist=False))
+    return jsonify(scoped_run(payload,stop=6))
